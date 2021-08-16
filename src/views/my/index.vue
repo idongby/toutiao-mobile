@@ -16,6 +16,7 @@
                     class="update-btn"
                     size="small"
                     round
+                    to="/user/profile"
                 >编辑资料</van-button>
             </van-cell>
             <van-grid class="data-info" :border="false">
@@ -46,7 +47,12 @@
             </van-grid>
         </van-cell-group>
         <div v-else class="not-login">
-            <div @click="$router.push('/login')">
+            <div @click="$router.push({
+                name:'login',
+                query:{
+                    redirect:'/my'
+                }
+            })">
                 <img class="mobile" src="./手机.png" alt="">
             </div>
             <div class="text">登录/注册</div>
@@ -64,7 +70,12 @@
                 text="历史" />
         </van-grid>
         <van-cell title="消息通知" is-link to="/" />
-        <van-cell class="mb-4" title="小智同学" is-link to="/" />
+        <van-cell
+         class="mb-4" 
+         title="小智同学" 
+         is-link 
+         to="/user/chat" 
+        />
         <van-cell @click="onLogout" v-if="user" class="logout-cell" title="退出登录"/>
     </div>
 </template>
@@ -92,8 +103,10 @@ export default {
 
     methods: {
         async loadCurrentUser(){
-            const {data} = await getCurrentUser()
-            this.currentUser = data.data
+            if(this.user){
+                const {data} = await getCurrentUser()
+                this.currentUser = data.data
+            }
         },
         onLogout(){
             //提示用户确认退出
